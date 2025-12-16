@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tenant Registration</title>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f6f9;
+        }
+
+        .container {
+            width: 400px;
+            margin: 80px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 10px;
+            color: #3498db;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Register New Tenant</h2>
+
+        <form method="post">
+            <label>Name</label>
+            <input type="text" name="name" required>
+
+            <label>Contact Number</label>
+            <input type="text" name="contact" required>
+
+            <label>Select Available Room</label>
+            <select name="roomno" required>
+                <option value="">-- Select Room --</option>
+                {% for r in rooms %}
+                <option value="{{ r.roomno }}">{{ r.roomno }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Register Tenant</button>
+        </form>
+
+        <a href="{{ url_for('index') }}">⬅ Back to Home</a>
+    </div>
+</body>
+</html>
