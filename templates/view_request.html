@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Requests</title>
+
+<style>
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f6f9;
+}
+
+.container {
+    width: 800px;
+    margin: 60px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+h2 {
+    text-align: center;
+    color: #2c3e50;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #2c3e50;
+    color: white;
+}
+
+.pending {
+    color: red;
+    font-weight: bold;
+}
+
+.done {
+    color: green;
+    font-weight: bold;
+}
+
+button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+}
+
+.done-btn {
+    background-color: #2ecc71;
+}
+
+.pending-btn {
+    background-color: #e67e22;
+}
+
+a {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: #3498db;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Requests</h2>
+
+    <table>
+        <tr>
+            <th>Room No</th>
+            <th>Issue</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+
+        {% for r in requests %}
+        <tr>
+            <td>{{ r.roomno }}</td>
+            <td>{{ r.issue_description }}</td>
+            <td class="{{ 'done' if r.remark == 'Done' else 'pending' }}">
+                {{ r.remark }}
+            </td>
+            <td>
+                <!-- 🔄 OWNER STATUS UPDATE -->
+                <form method="post" action="{{ url_for('view_request') }}">
+                    <input type="hidden" name="request_id" value="{{ r.request_id }}">
+                    {% if r.remark == 'Pending' %}
+                        <button type="submit" name="status" value="Done" class="done-btn">
+                            Mark Done
+                        </button>
+                    {% else %}
+                        <button type="submit" name="status" value="Pending" class="pending-btn">
+                            Mark Pending
+                        </button>
+                    {% endif %}
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+
+        {% if requests|length == 0 %}
+        <tr>
+            <td colspan="4">No requests found</td>
+        </tr>
+        {% endif %}
+    </table>
+
+    <a href="{{ url_for('index') }}">⬅ Back to Home</a>
+</div>
+
+</body>
+</html>

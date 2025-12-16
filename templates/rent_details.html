@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rent Details</title>
+
+<style>
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f6f9;
+    padding: 30px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+h2 {
+    text-align: center;
+    color: #2c3e50;
+}
+
+.section {
+    margin-top: 40px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #2c3e50;
+    color: white;
+}
+
+form {
+    max-width: 400px;
+    margin: auto;
+}
+
+input, select, button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.status-paid {
+    color: green;
+    font-weight: bold;
+}
+
+.status-due {
+    color: red;
+    font-weight: bold;
+}
+
+a {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: #3498db;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Rent Management</h2>
+
+    <!-- ================= VIEW RENT DETAILS ================= -->
+    <div class="section">
+        <h3>Rent Details</h3>
+
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Room No</th>
+                <th>Amount</th>
+                <th>Month</th>
+                <th>Payment Date</th>
+                <th>Status</th>
+            </tr>
+
+           {% for r in rents %}
+<tr>
+    <td>{{ r.name }}</td>
+    <td>{{ r.roomno }}</td>
+    <td>{{ r.amount_paid if r.amount_paid else '-' }}</td>
+
+    <td>
+        {% if r.month_paid %}
+            {{ r.month_paid.strftime('%B %Y') }}
+        {% else %}
+            -
+        {% endif %}
+    </td>
+
+    <td>
+        {% if r.payment_date %}
+            {{ r.payment_date }}
+        {% else %}
+            -
+        {% endif %}
+    </td>
+
+    <td class="{{ 'status-paid' if r.status == 'PAID' else 'status-due' }}">
+        {{ r.status }}
+    </td>
+</tr>
+{% endfor %}
+
+
+            {% if rents|length == 0 %}
+            <tr>
+                <td colspan="6">No rent records found</td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
+
+    <!-- ================= ADD RENT DETAILS ================= -->
+    <div class="section">
+        <h3>Add Rent</h3>
+
+        <form method="post">
+            <label>Tenant Name</label>
+            <select name="tenant_id" required>
+                <option value="">Select Tenant</option>
+                {% for t in tenants %}
+                <option value="{{ t.id }}">{{ t.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Amount Paid</label>
+<input type="number" name="amount" required>
+
+<label>Month</label>
+<select name="month" required>
+    <option value="">Select Month</option>
+    {% for m in months %}
+        <option value="{{ m[0] }}">{{ m[1] }}</option>
+    {% endfor %}
+</select>
+
+<label>Year</label>
+<select name="year" required>
+    <option value="">Select Year</option>
+    {% for y in years %}
+        <option value="{{ y }}">{{ y }}</option>
+    {% endfor %}
+</select>
+
+
+
+
+            <button type="submit">Add Rent</button>
+        </form>
+    </div>
+
+    <a href="{{ url_for('index') }}">⬅ Back to Home</a>
+</div>
+
+</body>
+</html>
